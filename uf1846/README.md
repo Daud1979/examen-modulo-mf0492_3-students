@@ -16,11 +16,11 @@ En la mayoría de las ocasiones tan solo es necesario modificar o añadir una o 
 
 ## Apartado A : Obtener la lista de pacientes en formato JSON
 
-Modifica el _endpoint_ `GET /api/patients` (http://localhost:3000/api/patients) para obtener la lista de pacientes de la base de datos en formato JSON.
+<!-- Modifica el _endpoint_ `GET /api/patients` (http://localhost:3000/api/patients) para obtener la lista de pacientes de la base de datos en formato JSON. -->
 
 ## Apartado B
 
-Cuando accedemos a http://localhost:3000 no podemos ver el número de pacientes totales de la base de datos. Modifica el fichero *home.ejs* para arreglar este fallo.
+<!-- Cuando accedemos a http://localhost:3000 no podemos ver el número de pacientes totales de la base de datos. Modifica el fichero *home.ejs* para arreglar este fallo. -->
 
 ## Apartado C
 

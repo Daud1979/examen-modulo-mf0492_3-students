@@ -1,9 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Patient = require('./models/patient');
-
+const fs = require('fs');
 const app = express();
+const { format } = require('date-fns');
+const moment = require('moment');
 
+const date = moment(); 
+const fecha = date.format('YYYY-MM-DD');
 // Conexión a la base de datos con Mongoose (nueva sintaxis)
 mongoose.connect('mongodb+srv://sololectura:sololectura@cluster0.c8tq0vp.mongodb.net/catsalut')
     .then(() => console.log('Conectado a la base de datos'))
@@ -17,6 +21,7 @@ app.use(express.json()); // Middleware integrado para manejar JSON
 app.get('/', async (req, res) => {
     try {
         const totalPatients = await Patient.countDocuments();
+     
         res.render('home', { totalPatients });
     } catch (err) {
         res.status(500).send('Error al cargar la página de inicio');
@@ -26,7 +31,8 @@ app.get('/', async (req, res) => {
 // Endpoint 1: Obtener todos los pacientes en formato JSON en la ruta /api/patients
 app.get('/api/patients', async (req, res) => {
     try {
-        const patients = [];
+        const patients =await Patient.find();
+     
         res.json({
             message: "Query executed successfully",
             results: patients
@@ -43,12 +49,15 @@ app.get('/form', (req, res) => {
 
 // Endpoint 3: Verificar si el paciente existe y mostrar información
 app.get('/check', async (req, res) => {
-    
+   
     try {
-        const patient = await Patient.findOne();
+        const patient = await Patient.findOne({ssn:req.query.ssn});
+        //verificar si existe
+        
         console.log("🚀 ~ file: app.js:52 ~ app.get ~ patient:", patient)
-
+        filetxt(fecha,`Se ha realizado una consulta sobre el paciente número ${req.query.ssn} la dia ${new Date()}`);
         if (patient) {
+           
             res.render('patient-info', { patient });
         } else {
             res.render('patient-info', { patient: null, message: 'El paciente no existe en la base de datos' });
@@ -57,7 +66,15 @@ app.get('/check', async (req, res) => {
         res.status(500).send('Error al verificar el paciente');
     }
 });
-
+//crear archivo text: 
+function filetxt(fileName, content) {
+    
+    fs.appendFile(`${fileName}.txt`, content + '\n', (err) => { 
+        if (err) {
+            console.error('se produjo un error', err);
+        } 
+    });
+}
 // Iniciar el servidor
 const PORT = 3000;
 app.listen(PORT, () => {
